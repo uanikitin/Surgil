@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Графики Скважины</title>
+    <style>
+        .container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button {
+            display: inline-block;
+            width: 150px;
+            padding: 10px;
+            margin: 10px;
+            background-color: #2196F3;
+            color: white;
+            text-align: center;
+            font-size: 16px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .button:hover {
+            background-color: #1e87d0;
+        }
+
+        .map-container {
+            height: 400px;
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        .update-date {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+
+    <!-- Подключение библиотеки Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <script>
+        // Данные координат скважин
+        const wellCoordinates = {
+            "85": { lat: 43.991978, lng: 58.71925 },  // Замените на фактические координаты
+            "129": { lat: 43.987405, lng: 58.720625 }, // Замените на фактические координаты
+            "36": { lat: 44.061878, lng: 58.686961 },  // Замените на фактические координаты
+            "127": { lat: 43.990588, lng: 58.71539 }  // Замените на фактические координаты
+        };
+
+        // Получение параметра well из URL
+        function getWellNumber() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('well');
+        }
+
+        function loadWellData() {
+            const wellNumber = getWellNumber();
+            if (wellNumber && wellCoordinates[wellNumber]) {
+                document.getElementById("wellTitle").innerText = "Скважина " + wellNumber;
+                document.getElementById("parameters").href = wellNumber + "_surf.html";
+                document.getElementById("analysis").href = wellNumber + "_dp.html";
+
+                // Инициализация карты
+                const map = L.map('map').setView([wellCoordinates[wellNumber].lat, wellCoordinates[wellNumber].lng], 13);
+
+                // Добавление базового слоя карты (OpenStreetMap)
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+
+                // Добавление маркера на карту для выбранной скважины
+                L.marker([wellCoordinates[wellNumber].lat, wellCoordinates[wellNumber].lng])
+                    .addTo(map)
+                    .bindPopup(`Скважина ${wellNumber}`)
+                    .openPopup();
+            } else {
+                document.getElementById("container").innerText = "Скважина не выбрана!";
+            }
+
+            // Установка текущей даты обновления
+            const currentDate = new Date();
+            const formattedDate = currentDate.toLocaleDateString('ru-RU', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            document.getElementById("updateDate").innerText = "Дата обновления данных: " + formattedDate;
+        }
+    </script>
+</head>
+<body onload="loadWellData()">
+
+    <div id="container" class="container">
+        <h1 id="wellTitle">Скважина</h1>
+
+        <a id="parameters" href="#" class="button">Параметры скважины</a>
+        <a id="analysis" href="#" class="button">Анализ dP</a>
+
+        <!-- Дата обновления данных -->
+        <div class="update-date" id="updateDate"></div>
+
+        <!-- Контейнер для карты -->
+        <div id="map" class="map-container"></div>
+
+        <!-- Кнопка для возврата на главную страницу -->
+        <a href="main.html" class="button">На главную</a>
+    </div>
+
+</body>
+</html>
