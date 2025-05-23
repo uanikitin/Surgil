@@ -49,8 +49,9 @@
         const wellCoordinates = {
             "85": { lat: 43.991978, lng: 58.71925 },  // Замените на фактические координаты
             "129": { lat: 43.987405, lng: 58.720625 }, // Замените на фактические координаты
-            "36": { lat: 44.061878, lng: 58.686961 },  // Замените на фактические координаты
-            "127": { lat: 43.990588, lng: 58.71539 }  // Замените на фактические координаты
+            "120": { lat: 44.061878, lng: 58.686961 },  // Замените на фактические координаты не правильные 
+            "131": { lat: 43.990588, lng: 58.71539 }  // Замените на фактические координаты не правильные
+            "134": { lat: 43.990588, lng: 58.71539 }  // Замените на фактические координаты не правильные
         };
 
         // Получение параметра well из URL
@@ -63,8 +64,9 @@
             const wellNumber = getWellNumber();
             if (wellNumber && wellCoordinates[wellNumber]) {
                 document.getElementById("wellTitle").innerText = "Скважина " + wellNumber;
-                document.getElementById("parameters").href = wellNumber + "_surf.html";
-                document.getElementById("analysis").href = wellNumber + "_dp.html";
+                document.getElementById("parameters").href = wellNumber + "_flow_rate_graph.html";
+                document.getElementById("pressure_diff").href = wellNumber + "_pressure_difference_with_reagents.html";
+                document.getElementById("analysis").href = wellNumber + "_pressure_comparison.html";
 
                 // Инициализация карты
                 const map = L.map('map').setView([wellCoordinates[wellNumber].lat, wellCoordinates[wellNumber].lng], 13);
